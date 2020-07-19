@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 // * * * MiddleWares * * * *
 
-app.use(cors()); 
+// app.use(cors()); 
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json()); 
 
@@ -26,9 +26,7 @@ app.use(realizedProjects);
 app.use(workShops); 
 app.use(pilotPrograms); 
 
-app.use('/', (req, res) => {
-    console.log('hello');
-})
+
 
 
 // * * * Connect to MongoDB  * * * * 
