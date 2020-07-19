@@ -26,6 +26,10 @@ app.use(realizedProjects);
 app.use(workShops); 
 app.use(pilotPrograms); 
 
+app.use('/', (req, res) => {
+    console.log('hello');
+})
+
 
 // * * * Connect to MongoDB  * * * * 
 const mongoDB = require('./server'); 
