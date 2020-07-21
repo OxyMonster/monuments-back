@@ -1,7 +1,7 @@
 const mongoose= require('mongoose'); 
 
 
-const dbURI = 'mongodb://localhost:27017/myapp';
+const dbURI = process.env.DB_CONNECT;
 mongoose.connect( dbURI , { useUnifiedTopology: true });
 
 mongoose.connection.once('connected', () => {

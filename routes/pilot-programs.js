@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router(); 
 const pilotProgramsModel = require('../models/pilot-programs-model'); 
 const multer = require('multer'); 
+const verify = require('./verify-token'); 
 
 // * * * *  Multer Configurations * * * * 
 
@@ -17,33 +18,49 @@ let storage = multer.diskStorage({
 let upload  = multer({storage: storage});     
 
 
-router.post('/api/post-pilot-programs', upload.single('file'), (req, res) => {
+router.post('/api/post-pilot-programs', upload.any('file'), (req, res) => {
 
     const pilotPrograms = new pilotProgramsModel({
         title: req.body.title,
         description: req.body.description,
-        file: req.file, 
+        file: req.files, 
     }); 
 
 
-    console.log(req.file);
+    console.log(req.files);
     
 
-    pilotPrograms.save()
-                 .then(data => {
-                    console.log(data);
-                     res.status(200).json(data); 
-                })
-                .catch(err => {
-                    res.status(400).json(err); 
-                    console.log(err);
-                });
+           pilotPrograms.save()
+                        .then(data => {
+                            console.log(data);
+                            res.status(200).json(data); 
+                        })
+                        .catch(err => {
+                            res.status(400).json(err); 
+                            console.log(err);
+                        });
 
             
 }); 
 
+   
 
-router.get('/api/get-pilot-programs', (req, res) => {
+router.delete('/api/delete-pilot-programs/:id', (req, res) => {
+    console.log(req.params.id);
+    const id = req.params.id; 
+
+  pilotProgramsModel.findByIdAndRemove(id)
+                    .then(data => {
+                        console.log(data);
+                            res.status(200).json(data)
+                    }, err => {
+                        console.log(err);
+                        res.status(400).json(err); 
+                    }); 
+            
+}); 
+
+router.get('/api/pilot-projects', (req, res) => {
 
     pilotProgramsModel.find()
                       .then(data => {
@@ -54,5 +71,17 @@ router.get('/api/get-pilot-programs', (req, res) => {
                       })
 }); 
 
+
+router.get('/api/pilot-projects/:id', (req, res) => {
+
+    pilotProgramsModel.findById(req.params.id)
+                      .then(data => {
+                        res.status(200).json({'data': data}); 
+                      })
+                      .catch(err => {
+                          res.status(400).json(err); 
+                      })
+}); 
+  
 
 module.exports = router; 

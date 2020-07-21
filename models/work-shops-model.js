@@ -6,6 +6,6 @@ const workShopsSchema = new mongoose.Schema({
     file: Object
 }); 
 
-const workShops = mongoose.model('Culture',workShopsSchema ); 
+const workShops = mongoose.model('WorkShops',workShopsSchema ); 
 
 module.exports = workShops; 

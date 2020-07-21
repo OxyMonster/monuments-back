@@ -19,12 +19,12 @@ let upload  = multer({storage: storage});
 
 
 // * * * * Post Data * * * * *
-router.post('/api/post-publications', upload.single('file'), (req, res) => {
+router.post('/api/post-publications', upload.any('file'), (req, res) => {
 
     const publication = new publicationsModel({
         title: req.body.title,
         description: req.body.description,
-        file: req.file, 
+        file: req.files, 
     }); 
 
 
@@ -44,8 +44,34 @@ router.post('/api/post-publications', upload.single('file'), (req, res) => {
 }); 
 
 
+router.delete('/api/delete-publications/:id', (req, res) => {
+    console.log(req.params.id);
+    const id = req.params.id; 
+
+    publicationsModel.findByIdAndRemove(id)
+                    .then(data => {
+                        console.log(data);
+                            res.status(200).json(data)
+                    }, err => {
+                        console.log(err);
+                        res.status(400).json(err); 
+                    }); 
+            
+}); 
+
+
 router.get('/api/get-publications', (req, res) => {
     publicationsModel.find()
+                     .then(data => {
+                         res.status(200).json(data); 
+                     })
+                     .catch(err => {
+                         res.status(400).json(err); 
+                     }); 
+}); 
+
+router.get('/api/get-publications/:id', (req, res) => {
+    publicationsModel.findById(req.params.id)
                      .then(data => {
                          res.status(200).json(data); 
                      })

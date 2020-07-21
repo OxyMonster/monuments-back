@@ -2,8 +2,6 @@ const express = require('express');
 const router = express.Router(); 
 const projectsModel = require('../models/projects-model'); 
 const multer = require('multer'); 
-const PilotPrograms = require('../models/pilot-programs-model');
-const e = require('express');
 
 // * * * *  Multer Configurations * * * * 
 
@@ -20,12 +18,12 @@ let upload  = multer({storage: storage});
 
 
 // * * * * Post Data * * * * *
-router.post('/api/post-projects', upload.single('file'), (req, res) => {
+router.post('/api/post-projects', upload.any('file'), (req, res) => {
 
     const projects = new projectsModel({
         title: req.body.title,
         description: req.body.description,
-        file: req.file, 
+        file: req.files, 
     }); 
 
 
@@ -45,8 +43,35 @@ router.post('/api/post-projects', upload.single('file'), (req, res) => {
             
 }); 
 
-router.get('/api/get-projects', (req, res) => {
+
+router.delete('/api/delete-projects/:id', (req, res) => {
+    console.log(req.params.id);
+    const id = req.params.id; 
+
+       projectsModel.findByIdAndRemove(id)
+                    .then(data => {
+                        console.log(data);
+                            res.status(200).json(data)
+                    }, err => {
+                        console.log(err);
+                        res.status(400).json(err); 
+                    }); 
+            
+}); 
+
+router.get('/api/projects', (req, res) => {
     projectsModel.find()
+                 .then(data => {
+                     res.status(200).json({'data': data}); 
+                 })
+                .catch(err => {
+                    res.status(400).json(err); 
+                }); 
+}); 
+
+
+router.get('/api/projects/:id', (req, res) => {
+    projectsModel.findById(req.params.id)
                  .then(data => {
                      res.status(200).json({'data': data}); 
                  })
