@@ -3,7 +3,7 @@ const router = express.Router();
 const publicationsModel = require('../models/publications-model'); 
 const multer = require('multer'); 
 const e = require('express');
-
+const fs = require('fs'); 
 // * * * *  Multer Configurations * * * * 
 
 let storage = multer.diskStorage({
@@ -51,7 +51,11 @@ router.delete('/api/delete-publications/:id', (req, res) => {
     publicationsModel.findByIdAndRemove(id)
                     .then(data => {
                         console.log(data);
+                        fs.unlink(`./${data.file[0].path}`, (img) => {
+                            console.log(img);
                             res.status(200).json(data)
+                        }, err => console.log(err))
+
                     }, err => {
                         console.log(err);
                         res.status(400).json(err); 

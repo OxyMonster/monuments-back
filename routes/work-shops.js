@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router(); 
 const workShopsModel = require('../models/work-shops-model');
 const multer = require('multer'); 
-
+const fs = require('fs'); 
 // * * * *  Multer Configurations * * * * 
 
 let storage = multer.diskStorage({
@@ -43,10 +43,15 @@ router.delete('/api/delete-work-shops/:id', (req, res) => {
     console.log(req.params.id);
     const id = req.params.id; 
 
-    workShops.findByIdAndRemove(id)
+    workShopsModel.findByIdAndRemove(id)
              .then(data => {
+
                  console.log(data);
-                 res.status(200).json(data)
+                 fs.unlink(`./${data.file[0].path}`, (img) => {
+                    console.log(img);
+                    res.status(200).json(data)
+                }, err => console.log(err))
+
              }, err => {
                  console.log(err);
                  res.status(400).json(err); 

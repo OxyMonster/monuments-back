@@ -3,7 +3,7 @@ const router = express.Router();
 const realizedProjectsModel = require('../models/realized-projects-model'); 
 const multer = require('multer'); 
 const realizedProjects = require('../models/realized-projects-model');
-
+const fs = require('fs'); 
 // * * * *  Multer Configurations * * * * 
 
 let storage = multer.diskStorage({
@@ -50,8 +50,12 @@ router.delete('/api/delete-realized-projects/:id', (req, res) => {
 
     realizedProjectsModel.findByIdAndRemove(id)
                          .then(data => {
+                            fs.unlink(`./${data.file[0].path}`, (img) => {
+                                console.log(img);
+                                res.status(200).json(data)
+                            }, err => console.log(err))
                              console.log(data);
-                             res.status(200).json(data)
+
                         }, err => {
                             console.log(err);
                             res.status(400).json(err); 

@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router(); 
 const projectsModel = require('../models/projects-model'); 
 const multer = require('multer'); 
+const fs = require('fs'); 
 
 // * * * *  Multer Configurations * * * * 
 
@@ -50,8 +51,12 @@ router.delete('/api/delete-projects/:id', (req, res) => {
 
        projectsModel.findByIdAndRemove(id)
                     .then(data => {
-                        console.log(data);
+
+                        fs.unlink(`./${data.file[0].path}`, (img) => {
+                            console.log(img);
                             res.status(200).json(data)
+                        }, err => console.log(err))
+
                     }, err => {
                         console.log(err);
                         res.status(400).json(err); 
