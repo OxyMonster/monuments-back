@@ -45,7 +45,7 @@ router.post('/api/post-pilot-programs', upload.any('file'), (req, res) => {
 
    
 
-router.delete('/api/delete-pilot-programs/:id', (req, res) => {
+router.delete('/api/delete-pilot-projects/:id', (req, res) => {
     console.log(req.params.id);
     const id = req.params.id; 
 
