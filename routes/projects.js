@@ -19,7 +19,7 @@ let upload  = multer({storage: storage});
 
 
 // * * * * Post Data * * * * *
-router.post('/api/post-projects', upload.any('file'), (req, res) => {
+router.post('/api/post-projects', upload.array('file'), (req, res) => {
 
     const projects = new projectsModel({
         title: req.body.title,

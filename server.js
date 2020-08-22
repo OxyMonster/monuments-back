@@ -1,6 +1,5 @@
 const mongoose= require('mongoose'); 
 
-
 const dbURI = process.env.DB_CONNECT;
 mongoose.connect( dbURI , { useUnifiedTopology: true });
 
